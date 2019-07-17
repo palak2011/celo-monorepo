@@ -544,6 +544,23 @@ contract Validators is IValidators, Ownable, ReentrancyGuard, Initializable, Usi
   }
 
   /**
+   * @notice Returns validator public key.
+   * @param account The account that registered the validator.
+   * @return The validator's public key.
+   */
+  function getValidatorPublicKey(
+    address account
+  )
+    external
+    view
+    returns (bytes memory)
+  {
+    require(isValidator(account));
+    Validator storage validator = validators[account];
+    return validator.publicKey;
+  }
+
+  /**
    * @notice Returns validator group information.
    * @param account The account that registered the validator group.
    * @return The unpacked validator group struct.
