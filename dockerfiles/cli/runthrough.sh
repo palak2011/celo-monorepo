@@ -1,11 +1,10 @@
 #!/bin/sh
 
-CELO_VALIDATOR_ADDRESS='0xa0Af2E71cECc248f4a7fD606F203467B500Dd53B'
-CELO_VALIDATOR_GROUP_ADDRESS='0x456f41406B32c45D59E539e4BBA3D7898c3584dA'
+CELO_VALIDATOR_ADDRESS='0xcb681a3d0f17d1d91209a1454ff47e5010011934'
+CELO_VALIDATOR_GROUP_ADDRESS='0x8c67a422ea19b525ecf934af3dedfe0b71795b2f'
 
-TRANSFER_AMOUNT=100
 NOTICE_PERIOD=5184000
-DEPOSIT_AMOUNT=1000000000000000000
+AMOUNT=1000000000000000000
 
 alias celocli="docker exec -t -i cli_container /celocli"
 
@@ -15,12 +14,12 @@ celocli account:balance $CELO_VALIDATOR_ADDRESS
 celocli account:balance $CELO_VALIDATOR_GROUP_ADDRESS
 
 # transferdollar comand
-celocli account:transferdollar --from $CELO_VALIDATOR_ADDRESS --amountInWei $TRANSFER_AMOUNT --to $CELO_VALIDATOR_GROUP_ADDRESS
-celocli account:transferdollar --from $CELO_VALIDATOR_GROUP_ADDRESS --amountInWei $TRANSFER_AMOUNT --to $CELO_VALIDATOR_ADDRESS
+celocli account:transferdollar --from $CELO_VALIDATOR_ADDRESS --amountInWei $AMOUNT --to $CELO_VALIDATOR_GROUP_ADDRESS
+celocli account:transferdollar --from $CELO_VALIDATOR_GROUP_ADDRESS --amountInWei $AMOUNT --to $CELO_VALIDATOR_ADDRESS
 
 # transfergold command
-celocli account:transfergold --from $CELO_VALIDATOR_ADDRESS --amountInWei $TRANSFER_AMOUNT --to $CELO_VALIDATOR_GROUP_ADDRESS
-celocli account:transfergold --from $CELO_VALIDATOR_GROUP_ADDRESS --amountInWei $TRANSFER_AMOUNT --to $CELO_VALIDATOR_ADDRESS
+celocli account:transfergold --from $CELO_VALIDATOR_ADDRESS --amountInWei $AMOUNT --to $CELO_VALIDATOR_GROUP_ADDRESS
+celocli account:transfergold --from $CELO_VALIDATOR_GROUP_ADDRESS --amountInWei $AMOUNT --to $CELO_VALIDATOR_ADDRESS
 
 celocli account:unlock --account $CELO_VALIDATOR_ADDRESS --password $PASSWORD
 celocli account:unlock --account $CELO_VALIDATOR_GROUP_ADDRESS --password $PASSWORD
@@ -32,8 +31,8 @@ celocli bonds:register --from $CELO_VALIDATOR_ADDRESS
 celocli bonds:register --from $CELO_VALIDATOR_GROUP_ADDRESS
 
 # deposit command
-celocli bonds:deposit --from $CELO_VALIDATOR_ADDRESS --goldAmount $DEPOSIT_AMOUNT --noticePeriod $NOTICE_PERIOD
-celocli bonds:deposit --from $CELO_VALIDATOR_GROUP_ADDRESS --goldAmount $DEPOSIT_AMOUNT --noticePeriod $NOTICE_PERIOD
+celocli bonds:deposit --from $CELO_VALIDATOR_ADDRESS --goldAmount $AMOUNT --noticePeriod $NOTICE_PERIOD
+celocli bonds:deposit --from $CELO_VALIDATOR_GROUP_ADDRESS --goldAmount $AMOUNT --noticePeriod $NOTICE_PERIOD
 
 # show command
 celocli bonds:show $CELO_VALIDATOR_ADDRESS --noticePeriod $NOTICE_PERIOD
