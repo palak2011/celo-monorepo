@@ -2,7 +2,7 @@ import colors from '@celo/react-components/styles/colors'
 import fontStyles from '@celo/react-components/styles/fonts'
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { CURRENCY_ENUM } from 'src/geth/consts'
+import { CURRENCIES, CURRENCY_ENUM } from 'src/geth/consts'
 import { getMoneyDisplayValue } from 'src/utils/formatting'
 
 interface Props {
@@ -46,13 +46,11 @@ export default class CurrencyDisplay extends React.PureComponent<Props> {
     const dollarStyle = { fontSize, lineHeight: Math.round(fontSize * 1.3), color: this.color() }
     return (
       <View style={styles.container}>
-        {this.props.type === CURRENCY_ENUM.DOLLAR ? (
-          <Text numberOfLines={1} style={[fontStyles.regular, this.symbolStyle(fontSize)]}>
-            ₱
-          </Text>
-        ) : null}
+        <Text numberOfLines={1} style={[fontStyles.regular, this.symbolStyle(fontSize)]}>
+        {CURRENCIES[Tokens.DOLLAR].symbol}
+        </Text>
         <Text numberOfLines={1} style={[styles.currency, fontStyles.regular, dollarStyle]}>
-          {this.amount()}
+        {this.amount()}
         </Text>
       </View>
     )
