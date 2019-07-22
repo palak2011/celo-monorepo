@@ -105,6 +105,63 @@ jobs:
             mkdir -p test-results/jest
             yarn run lerna --ignore @celo/mobile --ignore @celo/protocol --ignore @celo/celotool --ignore @celo/contractkit --ignore @celo/celocli run test
 
+  mobile-end-to-end-test:
+    working_directory: ~/app
+    docker:
+      - image: circleci/android:api-28
+
+    steps:
+      - checkout
+
+      - run:
+          name: Setup Android emulator
+          command: |
+            set -e
+            sdkmanager "system-images;android-16;default;armeabi-v7a"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-16;default;armeabi-v7a"
+      
+      - run:
+          name: Launch emulator
+          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+          background: true
+
+      - run:
+          name: Wait for emulator
+          command: circle-android wait-for-boot
+
+      - run:
+          name: Install app (debug version)
+          command: |
+            set -euo pipefail
+            set -x
+            cd packages/mobile
+            yarn run dev
+
+      # - run:
+      #     name: Install app (debug version)
+      #     command: |
+      #       set -euo pipefail
+      #       set -x
+      #       cd /actual-celo-monorepo
+      #       adb install app-x86-debug.apk
+
+      #       # curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      #       # echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      #       # sudo apt update
+      #       # sudo apt install yarn
+            
+      #       # sudo apt update
+      #       # # To avoid setupterm: could not find terminfo database
+      #       # export TERM=linux && export TERMINFO=/etc/terminfo
+      #       # # https://github.com/yarnpkg/yarn/issues/2821#issuecomment-284181365
+      #       # sudo apt remove cmdtest
+      #       # sudo apt install yarn
+      #       # yarn
+      #       # cd packages/mobile/android
+      #       # ENVFILE=.env.test ./gradlew assembleDebug
+      #       # cd -
+
+
   mobile-test-build-app:
     working_directory: ~/app
     docker:
@@ -298,34 +355,37 @@ workflows:
   celo-monorepo-build:
     jobs:
       - install_dependencies
-      - lint-checks:
+      - mobile-end-to-end-test:
           requires:
             - install_dependencies
-      - general-test:
-          requires:
-            - install_dependencies
-            - lint-checks
-      - mobile-test:
-          requires:
-            - install_dependencies
-            - lint-checks
-      - mobile-test-build-app:
-          requires:
-            - install_dependencies
-            - lint-checks
-      - verification-pool-api:
-          requires:
-            - install_dependencies
-            - lint-checks
-      - protocol-test:
-          requires:
-            - install_dependencies
-      - end-to-end-geth-transfer-test:
-          requires:
-            - install_dependencies
-      - end-to-end-geth-governance-test:
-          requires:
-            - install_dependencies
-      - end-to-end-geth-sync-test:
-          requires:
-            - install_dependencies
+      # - lint-checks:
+      #     requires:
+      #       - install_dependencies
+      # - general-test:
+      #     requires:
+      #       - install_dependencies
+      #       - lint-checks
+      # - mobile-test:
+      #     requires:
+      #       - install_dependencies
+      #       - lint-checks
+      # - mobile-test-build-app:
+      #     requires:
+      #       - install_dependencies
+      #       - lint-checks
+      # - verification-pool-api:
+      #     requires:
+      #       - install_dependencies
+      #       - lint-checks
+      # - protocol-test:
+      #     requires:
+      #       - install_dependencies
+      # - end-to-end-geth-transfer-test:
+      #     requires:
+      #       - install_dependencies
+      # - end-to-end-geth-governance-test:
+      #     requires:
+      #       - install_dependencies
+      # - end-to-end-geth-sync-test:
+      #     requires:
+      #       - install_dependencies
