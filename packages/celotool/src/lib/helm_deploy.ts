@@ -389,6 +389,8 @@ async function upgradeNodeTypeStaticIPs(
         deleteIPAddress(`${celoEnv}-${nodeType}-${i}`)
       )
     )
+  } else {
+    console.info(`Maintaining ${nodeType} node count as ${newNodeCount}`)
   }
 }
 

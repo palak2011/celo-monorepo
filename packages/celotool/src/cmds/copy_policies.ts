@@ -34,6 +34,7 @@ export const handler = async (argv: CopyPoliciesArgv) => {
   await switchToClusterFromEnv(false)
 
   try {
+    console.info('Downloading policies')
     // TODO(asa): Define Policy type.
     const fromPolicies: any[] = await downloadPolicies(argv.celoEnv)
 
@@ -46,7 +47,9 @@ export const handler = async (argv: CopyPoliciesArgv) => {
     const toNotificationChannel = fetchEnv(envVar.STACKDRIVER_NOTIFICATION_CHANNEL)
     const toProject = fetchEnv(envVar.TESTNET_PROJECT_NAME)
 
+    console.info('Iterating through fromPolicies')
     for (const policy of fromPolicies) {
+      console.info('Processing policy', policy)
       // Delete automatically generated fields per
       // https://cloud.google.com/monitoring/alerts/using-alerting-api#monitoring_alert_list_policies-gcloud
       delete policy.name
@@ -63,8 +66,9 @@ export const handler = async (argv: CopyPoliciesArgv) => {
       policyString = policyString.split(fromProject).join(toProject)
       toPolicies.push(JSON.parse(policyString))
     }
-
+    console.info('Uploading policies')
     await uploadPolicies(argv.toEnv, toPolicies)
+    console.info('Deleting other policies')
     await deleteOtherPolicies(argv.toEnv, toPolicies)
   } catch (error) {
     console.error(`Unable to copy alert policies from ${argv.celoEnv} to ${argv.toEnv}:\n${error}`)

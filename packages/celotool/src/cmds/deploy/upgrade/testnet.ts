@@ -1,3 +1,4 @@
+import sleep from 'sleep-promise'
 import { UpgradeArgv } from '@celo/celotool/src/cmds/deploy/upgrade'
 import { switchToClusterFromEnv } from 'src/lib/cluster'
 import { resetAndUpgradeHelmChart, upgradeHelmChart, upgradeStaticIPs } from 'src/lib/helm_deploy'
@@ -20,6 +21,7 @@ export const handler = async (argv: TestnetArgv) => {
   await switchToClusterFromEnv()
 
   upgradeStaticIPs(argv.celoEnv)
+  await sleep(3000)
 
   if (argv.reset) {
     await resetAndUpgradeHelmChart(argv.celoEnv)
