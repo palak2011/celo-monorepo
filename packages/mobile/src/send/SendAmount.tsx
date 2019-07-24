@@ -6,7 +6,7 @@ import { fontStyles } from '@celo/react-components/styles/fonts'
 import { componentStyles } from '@celo/react-components/styles/styles'
 import { parseInputAmount } from '@celo/utils/src/parsing'
 import BigNumber from 'bignumber.js'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { withNamespaces, WithNamespaces } from 'react-i18next'
 import {
   ActivityIndicator,
@@ -37,25 +37,23 @@ import { E164NumberToAddressType } from 'src/identity/reducer'
 import { navigate } from 'src/navigator/NavigationService'
 import { Screens } from 'src/navigator/Screens'
 import { RootState } from 'src/redux/reducers'
-import { updateSuggestedFee } from 'src/send/actions'
+import { getFeeDollars } from 'src/send/fees'
 import LabeledTextInput from 'src/send/LabeledTextInput'
-import { getSuggestedFeeDollars } from 'src/send/selectors'
 import { CeloDefaultRecipient } from 'src/send/Send'
 import { ConfirmationInput } from 'src/send/SendConfirmation'
+import { useCalculateFee } from 'src/send/useCalculateFee'
 import DisconnectBanner from 'src/shared/DisconnectBanner'
 import { fetchDollarBalance } from 'src/stableToken/actions'
-import Logger from 'src/utils/Logger'
 import { RecipientKind } from 'src/utils/recipient'
-
-const TAG: string = 'send/SendAmount'
+import { currentAccountSelector } from 'src/web3/selectors'
 
 const MAX_COMMENT_LENGTH = 70
 
 type Props = StateProps & DispatchProps & NavigationInjectedProps & WithNamespaces
 
 interface StateProps {
+  account: string | null
   dollarBalance: BigNumber | null
-  suggestedFeeDollars: BigNumber
   defaultCountryCode: string
   e164NumberToAddress: E164NumberToAddressType
 }
@@ -65,13 +63,12 @@ interface DispatchProps {
   showMessage: typeof showMessage
   showError: typeof showError
   hideAlert: typeof hideAlert
-  updateSuggestedFee: typeof updateSuggestedFee
   fetchPhoneAddresses: typeof fetchPhoneAddresses
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  account: currentAccountSelector(state),
   dollarBalance: state.stableToken.balance ? new BigNumber(state.stableToken.balance) : null,
-  suggestedFeeDollars: getSuggestedFeeDollars(state),
   defaultCountryCode: state.account.defaultCountryCode,
   e164NumberToAddress: state.identity.e164NumberToAddress,
 })
@@ -81,14 +78,13 @@ export function SendAmount(props: Props) {
     t,
     defaultCountryCode,
     navigation,
-    suggestedFeeDollars,
+    account,
     dollarBalance,
     e164NumberToAddress,
     hideAlert,
     showError,
     showMessage,
     fetchPhoneAddresses,
-    updateSuggestedFee,
   } = props
 
   const [amount, setAmount] = useState('')
@@ -123,37 +119,18 @@ export function SendAmount(props: Props) {
     }
   }, [])
 
-  const amountGreaterThanBalance = () => {
-    return parseInputAmount(amount).isGreaterThan(dollarBalance || 0)
-  }
-
-  const calculateFee = () => {
-    if (amountGreaterThanBalance()) {
-      // No need to update fee as the user doesn't have enough anyways
-      return
-    }
-
-    if (verificationStatus === VerificationStatus.UNKNOWN) {
-      // Wait for verification status before calculating fee
-      return
-    }
-
-    Logger.debug(TAG, 'Updating fee')
-    const params = {
+  const params = useMemo(
+    () => ({
       // Just use a default here since it doesn't matter for fee estimation
       recipientAddress: CeloDefaultRecipient.address!,
       amount: parseInputAmount(amount).toString(),
       comment: reason,
-    }
-
-    updateSuggestedFee(
-      verificationStatus === VerificationStatus.VERIFIED,
-      getStableTokenContract,
-      params
-    )
-  }
-
-  const calculateFeeDebounced = calculateFee // don't debounce for now
+    }),
+    [amount, reason]
+  )
+  const verificationStatus = getRecipientVerificationStatus(recipient, e164NumberToAddress)
+  const fee = useCalculateFee(account, verificationStatus, getStableTokenContract, params)
+  const suggestedFeeDollars = getFeeDollars(fee ? fee.toString() : '')
 
   const getAmountIsValid = () => {
     const bigNumberAmount: BigNumber = parseInputAmount(amount)
@@ -167,8 +144,6 @@ export function SendAmount(props: Props) {
   }
 
   const { amountIsValid, userHasEnough } = getAmountIsValid()
-
-  const verificationStatus = getRecipientVerificationStatus(recipient, e164NumberToAddress)
 
   const getConfirmationInput = () => {
     const recipientAddress = getRecipientAddress(recipient, e164NumberToAddress)
@@ -221,7 +196,6 @@ export function SendAmount(props: Props) {
 
   const onAmountChanged = (newAmount: string) => {
     setAmount(newAmount)
-    calculateFeeDebounced()
   }
 
   const onReasonChanged = (newReason: string) => {
@@ -232,7 +206,6 @@ export function SendAmount(props: Props) {
     }
 
     setReason(newReason)
-    calculateFeeDebounced()
   }
 
   const renderButtons = () => {
@@ -436,7 +409,6 @@ export default componentWithAnalytics(
       fetchDollarBalance,
       showError,
       hideAlert,
-      updateSuggestedFee,
       showMessage,
       fetchPhoneAddresses,
     }

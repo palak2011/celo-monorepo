@@ -53,10 +53,10 @@ const INVITE_SEND_AMOUNT = '0.18'
 
 // TODO(Rossy) Cache this so we don't recalculate it every time we invite someone
 // Especially relevant when inviting many friends
-export async function getInvitationVerificationFee() {
+export async function getInvitationVerificationFee(): Promise<BigNumber> {
   // TODO(cmcewen): don't use this
   if (!USE_REAL_FEE) {
-    return web3.utils.toWei(INVITE_FEE)
+    return new BigNumber(web3.utils.toWei(INVITE_FEE))
   }
   const attestationsContract = await getAttestationsContract(web3)
   const stableTokenContract = await getStableTokenContract(web3)

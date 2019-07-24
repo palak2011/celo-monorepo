@@ -30,12 +30,12 @@ const storeData = {
 const TEXT_PLACEHOLDER = 'groceriesRent'
 const AMOUNT_PLACEHOLDER = 'amount'
 
-jest.mock('src/send/actions', () => ({
-  ...jest.requireActual('src/send/actions'),
-  updateSuggestedFee: jest.fn(() => ({ type: 'b' })),
+jest.mock('src/send/fees', () => ({
+  ...jest.requireActual('src/send/fees'),
+  getSuggestedFee: jest.fn(() => new BigNumber(1)),
 }))
 
-const { updateSuggestedFee } = require('src/send/actions')
+const { getSuggestedFee } = require('src/send/fees')
 
 describe('SendAmount', () => {
   beforeAll(() => {
@@ -44,7 +44,7 @@ describe('SendAmount', () => {
 
   describe('when commenting', () => {
     beforeEach(() => {
-      updateSuggestedFee.mockClear()
+      getSuggestedFee.mockClear()
     })
 
     const store = createMockStore(storeData)
@@ -67,10 +67,9 @@ describe('SendAmount', () => {
             showMessage={jest.fn()}
             showError={jest.fn()}
             hideAlert={jest.fn()}
-            updateSuggestedFee={updateSuggestedFee}
             fetchPhoneAddresses={fetchPhoneAddresses}
+            account="0x123"
             dollarBalance={new BigNumber(1)}
-            suggestedFeeDollars={new BigNumber(1)}
             e164NumberToAddress={{ [mockE164Number]: mockAccount }}
             defaultCountryCode={'+1'}
           />
@@ -85,7 +84,7 @@ describe('SendAmount', () => {
       await sleep(INPUT_DEBOUNCE_TIME)
 
       // Called once for debounce
-      expect(updateSuggestedFee).toHaveBeenCalledTimes(1)
+      expect(getSuggestedFee).toHaveBeenCalledTimes(1)
     })
 
     it('updates the comment/reason', () => {
@@ -110,10 +109,9 @@ describe('SendAmount', () => {
             showMessage={showMessage}
             showError={jest.fn()}
             hideAlert={jest.fn()}
-            updateSuggestedFee={jest.fn()}
             fetchPhoneAddresses={fetchPhoneAddresses}
+            account="0x123"
             dollarBalance={new BigNumber(1)}
-            suggestedFeeDollars={new BigNumber(1)}
             e164NumberToAddress={{ [mockE164Number2]: mockAccount2 }}
             defaultCountryCode={'+1'}
           />
