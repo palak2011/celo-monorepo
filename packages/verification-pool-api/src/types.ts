@@ -30,6 +30,7 @@ export interface SMSMessage {
   startTime: number // Timestamp when the service created the message
   finishTime: number | null // Timestamp when the SMS was sent or he service confirmed it failed. null if not yet finished
   messageState: MessageState // string representing the rewards distribution state of this message
+  uniquenessKey: string | null
 }
 
 export interface RewardableSMSMessage extends SMSMessage {

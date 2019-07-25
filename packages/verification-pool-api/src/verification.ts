@@ -24,7 +24,12 @@ const NUM_VERIFIERS_TO_WAKE = 3
 const MAX_VERIFIER_ATTEMPT_COUNT = 20
 const phoneUtil = PhoneNumberUtil.getInstance()
 
-export async function sendSmsCode(address: string, phoneNumber: string, message: string) {
+export async function sendSmsCode(
+  address: string,
+  phoneNumber: string,
+  message: string,
+  issuer: string
+) {
   console.info('Attempting to send sms verification code.')
 
   message = getFormattedMessage(message)
@@ -43,7 +48,7 @@ export async function sendSmsCode(address: string, phoneNumber: string, message:
   }
 
   const veriferIds = verifiers.map((v) => v.id).join(',')
-  const messageId = await saveMessage(phoneNumber, address, message, veriferIds)
+  const messageId = await saveMessage(phoneNumber, address, issuer, message, veriferIds)
   await triggerVerifiersSendSms(verifiers, messageId)
   await sleep(smsAckTimeout)
   const messageSent = await isMessageSent(messageId)

@@ -59,9 +59,23 @@ export function setVerifierProperties(id: string, props: { [key: string]: any })
     .update(props)
 }
 
+function makeUniquenessKey(phoneNumber: string, address: string, issuer: string) {
+  return `${phoneNumber}-${address}-${issuer}`
+}
+
+export async function doesMessageExist(phoneNumber: string, address: string, issuer: string) {
+  const entry = await database()
+    .ref(`/${CELO_ENV}/messages`)
+    .orderByChild('uniquenessKey')
+    .equalTo(makeUniquenessKey(phoneNumber, address, issuer))
+    .once('value')
+  return entry.numChildren() > 0
+}
+
 export async function saveMessage(
   phoneNumber: string,
   address: string,
+  issuer: string,
   smsText: string,
   verifierCandidates: string
 ): Promise<string> {
@@ -74,6 +88,7 @@ export async function saveMessage(
     startTime: Date.now(),
     finishTime: null,
     messageState: MessageState.DISPATCHING,
+    uniquenessKey: makeUniquenessKey(phoneNumber, address, issuer),
   }
   console.info('Saving new message to db')
   return (await database()

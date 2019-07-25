@@ -12,7 +12,7 @@ const mockReference = (data: any): any => {
     transaction: jest.fn(),
     push: jest.fn(() => ({ key: mockMessageId })),
     remove: jest.fn(),
-    once: jest.fn(() => ({ val: jest.fn(() => data) })),
+    once: jest.fn(() => ({ val: jest.fn(() => data), numChildren: jest.fn(() => 0) })),
   }
 }
 

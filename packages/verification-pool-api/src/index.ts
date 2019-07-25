@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import { CELO_ENV } from './celoEnv'
 import { configDummy } from './configDummy'
-import { releaseRewardsLock, tryAcquireRewardsLock } from './database'
+import { doesMessageExist, releaseRewardsLock, tryAcquireRewardsLock } from './database'
 import { deleteRewardedMessages, distributeAllPendingRewards } from './rewards'
 import { parseBase64, validateRequest } from './validation'
 import { disableInactiveVerifers, sendSmsCode } from './verification'
@@ -20,11 +20,21 @@ app.post('/v0.1/sms/', async (req: express.Request, res: express.Response) => {
     const message: string = req.body.message
     const issuer: string = req.body.issuer
 
+    const parsedAccount = parseBase64(account)
+    const parsedIssuer = parseBase64(issuer)
+
+    const alreadyRequested = await doesMessageExist(phoneNumber, parsedAccount, parsedIssuer)
+    if (alreadyRequested) {
+      console.error(`Error - already received request`)
+      res.status(401).json({ error: 'Already requested' })
+      return
+    }
+
     const isValid = await validateRequest(
       phoneNumber,
-      parseBase64(account),
+      parsedAccount,
       parseBase64(message),
-      parseBase64(issuer)
+      parsedIssuer
     )
 
     if (!isValid) {
@@ -33,7 +43,7 @@ app.post('/v0.1/sms/', async (req: express.Request, res: express.Response) => {
       return
     }
 
-    const messageId = await sendSmsCode(parseBase64(account), phoneNumber, message)
+    const messageId = await sendSmsCode(parsedAccount, phoneNumber, message, issuer)
     res.json({ messageId })
   } catch (e) {
     console.error('Failed to send sms', e)
