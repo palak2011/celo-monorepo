@@ -1,4 +1,6 @@
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
+import BigNumber from 'bignumber.js'
+import { useRef } from 'react'
 import { useAsync } from 'react-async-hook'
 import { INPUT_DEBOUNCE_TIME } from 'src/config'
 import { VerificationStatus } from 'src/identity/contactMapping'
@@ -25,5 +27,9 @@ export function useCalculateFee(
     params,
   ])
 
-  return asyncGetSuggestedFee.result
+  // Keep last defined result
+  const ref = useRef<BigNumber | undefined>()
+  ref.current = asyncGetSuggestedFee.result || ref.current
+
+  return ref.current
 }
