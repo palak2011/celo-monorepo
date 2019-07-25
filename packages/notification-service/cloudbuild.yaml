@@ -4,4 +4,4 @@ steps:
 - name: "gcr.io/cloud-builders/yarn"
   args: ["deploy", "-n $_NETWORK_NAME"]
   id: Deploy notification service to app engine based on _NETWORK_NAME substitution (integration, production, etc.)
-timeout: "1200s"
+timeout: "1300s"
