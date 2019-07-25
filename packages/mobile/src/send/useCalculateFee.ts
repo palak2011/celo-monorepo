@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import AwesomeDebouncePromise from 'awesome-debounce-promise'
 import { useAsync } from 'react-async-hook'
 import { INPUT_DEBOUNCE_TIME } from 'src/config'
 import { VerificationStatus } from 'src/identity/contactMapping'
@@ -13,7 +13,9 @@ export function useCalculateFee(
   params: BasicTokenTransfer
 ) {
   // Create a constant debounced function (created only once per component instance)
-  const debouncedGetSuggestedFee = useConstant(() => debounce(getSuggestedFee, INPUT_DEBOUNCE_TIME))
+  const debouncedGetSuggestedFee = useConstant(() =>
+    AwesomeDebouncePromise(getSuggestedFee, INPUT_DEBOUNCE_TIME)
+  )
 
   // Simply use it with useAsync
   const asyncGetSuggestedFee = useAsync(debouncedGetSuggestedFee, [
