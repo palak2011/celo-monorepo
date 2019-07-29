@@ -198,7 +198,6 @@ export function* assignAccountFromPrivateKey(key: string) {
     }
     // @ts-ignore
     const account = web3.eth.accounts.privateKeyToAccount('0x' + key)
-    Logger.debug(TAG + '@assignAccountFromPrivateKey', `Private key: ${key}`)
     // yield call(web3.eth.personal.unlockAccount, account, password, UNLOCK_DURATION)
     // Unclear why the account needed to be unlocked here but leaving commented out just in case
     Logger.debug(
