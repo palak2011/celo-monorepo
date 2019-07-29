@@ -190,8 +190,7 @@ export class SendAmount extends React.PureComponent<Props, State> {
   }
 
   onAmountChanged = (amount: string) => {
-    // Round to three decimals to ensure value in Wei is integer
-    const amountInDollars = String(Math.round((+amount * 1000) / DOLLAR_TO_PH) / 1000)
+    const amountInDollars = String(+amount / DOLLAR_TO_PH)
     this.setState({ amount: amountInDollars, localAmount: String(amount) })
     this.calculateFeeDebounced()
   }
