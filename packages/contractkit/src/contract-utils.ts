@@ -221,8 +221,7 @@ export async function sendTransactionAsync<T>(
   tx: TransactionObject<T>,
   account: string,
   gasCurrencyContract: StableToken | GoldToken,
-  logger: TxLogger = emptyTxLogger,
-  web3: Web3
+  logger: TxLogger = emptyTxLogger
 ): Promise<TxPromises> {
   // @ts-ignore
   const resolvers: TxPromiseResolvers = {}
@@ -261,8 +260,8 @@ export async function sendTransactionAsync<T>(
     const estimatedGas = Math.round((await tx.estimateGas(txParams)) * gasInflateFactor)
     logger(EstimatedGas(estimatedGas))
 
-    const serializedTx = tx
-    /* maybe {
+    await tx
+      .send({
         from: account,
         // @ts-ignore
         gasCurrency: gasCurrencyContract._address,
@@ -270,11 +269,7 @@ export async function sendTransactionAsync<T>(
         // Hack to prevent web3 from adding the suggested gold gas price, allowing geth to add
         // the suggested price in the selected gasCurrency.
         gasPrice: '0',
-      }
-      */
-
-    await web3.eth
-      .sendSignedTransaction('0x' + serializedTx.toString())
+      })
       .on('receipt', (r: TransactionReceipt) => {
         logger(ReceiptReceived(r))
         if (resolvers.receipt) {
