@@ -1,5 +1,7 @@
-import { RPCSubprovider, Web3ProviderEngine } from '@0x/subproviders'
 import Web3 from 'web3'
+
+import { RPCSubprovider, Web3ProviderEngine } from '@0x/subproviders'
+
 import { CeloProvider } from '../src/transaction-utils'
 
 export class Web3Utils {
@@ -15,8 +17,13 @@ export class Web3Utils {
     port: number,
     privateKey: string
   ): Promise<Web3> {
+    return Web3Utils.getWeb3WithSigningAbility2(`${protocol}://${ipAddress}:${port}`, privateKey)
+  }
+
+  // This web3 has signing ability.
+  static async getWeb3WithSigningAbility2(nodeUrl: string, privateKey: string): Promise<Web3> {
+    const rpcProvider = new RPCSubprovider(nodeUrl)
     const celoProvider = new CeloProvider(privateKey)
-    const rpcProvider = new RPCSubprovider(`${protocol}://${ipAddress}:${port}`)
 
     // Create a Web3 Provider Engine
     const providerEngine = new Web3ProviderEngine()

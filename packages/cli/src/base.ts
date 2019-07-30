@@ -1,5 +1,9 @@
-import { Command, flags } from '@oclif/command'
 import Web3 from 'web3'
+
+import { Web3Utils } from '@celo/contractkit'
+import { Command, flags } from '@oclif/command'
+
+import { Flags } from './utils/command'
 import { getNodeUrl } from './utils/config'
 import { injectDebugProvider } from './utils/eth-debug-provider'
 
@@ -7,6 +11,10 @@ export abstract class BaseCommand extends Command {
   static flags = {
     logLevel: flags.string({ char: 'l' }),
     help: flags.help({ char: 'h' }),
+    privateKey: Flags.privateKey({
+      description: 'Key to sign transactions with',
+      hidden: true,
+    }),
   }
 
   private _web3: Web3 | null = null
@@ -22,6 +30,12 @@ export abstract class BaseCommand extends Command {
       injectDebugProvider(this._web3)
     }
     return this._web3
+  }
+
+  // TODO: handle this more gracefully
+  async setLocalSignWeb3(privKey: string) {
+    const nodeUrl = getNodeUrl(this.config.configDir)
+    this._web3 = await Web3Utils.getWeb3WithSigningAbility2(nodeUrl, privKey)
   }
 
   // TODO(yorke): implement log(msg) switch on logLevel with chalk colored output

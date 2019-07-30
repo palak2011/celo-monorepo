@@ -30,6 +30,10 @@ export default class Report extends BaseCommand {
   async run() {
     const { flags: parsedFlags } = this.parse(Report)
 
+    if (parsedFlags.privateKey) {
+      await this.setLocalSignWeb3(parsedFlags.privateKey)
+    }
+
     const sortedOracles = await SortedOracles(this.web3)
 
     const stableToken = await StableToken(this.web3)
