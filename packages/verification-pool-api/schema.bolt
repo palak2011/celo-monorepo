@@ -41,7 +41,7 @@ path /{environment}/mobileVerifiers/{uid} is MobileVerifier {
 }
 
 path /{environment}/messages {
-  index() {[ "messageState", "phoneNum" ]}
+  index() {[ "messageState", "phoneNum", "uniquenessKey" ]}
 }
 
 path /{environment}/messages/{key} is SMSMessage {
