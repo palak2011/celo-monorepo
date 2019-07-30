@@ -53,6 +53,7 @@ export {
   sanitizeBase64,
   validateAttestationCode,
 } from './src/attestations'
+export { makeReportTx } from './src/oracle'
 export {
   CeloContract,
   Contracts,
