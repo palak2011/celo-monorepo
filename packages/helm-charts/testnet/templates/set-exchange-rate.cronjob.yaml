@@ -1,0 +1,56 @@
+{{ if .Values.contracts.cron_jobs.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "ethereum.fullname" . }}-set-exchange-rate
+  labels:
+    app: {{ template "ethereum.name" . }}
+    chart: {{ template "ethereum.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: "15 * * * *" # Every hour @ 15 past
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          volumes:
+          - 
+          initContainers:
+          - name: load-test-compute-pk
+            image: 'celotoolimage':{{'tag'}}
+            imagePullPolicy: {{ .Values.imagePullPolicy }}
+            command:
+              - bash
+              - "-c"
+              - |
+                /celo-monorepo/packages/celotool/bin/celotooljs.sh generate bip32 --mnemonic "$SECRET_MNEMONIC" --accountType load_testing --index $RID >> /root/.celo/pkey
+            env:
+            - name: SECRET_MNEMONIC
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ethereum.fullname" . }}-geth-account
+                  key: mnemonic
+            volumeMounts:
+            - name: data
+              mountPath: /root/.celo
+          containers:
+          - name: set-exchange-rate
+            image: {{ .Values.celocli-light.image.repository }}:{{ .Values.celocli-light.image.tag }}
+            imagePullPolicy: {{ .Values.imagePullPolicy }}
+            command:
+              - bash
+              - "-c"
+              - |
+                celocli config:set --node http://tx-nodes:8545
+                celocli exchange:report --numerator 10 --denominator 1 --from  --privateKey"
+            volumeMounts:
+            - name: data
+              mountPath: /root/.celo
+            resources:
+              requests:
+                memory: 100M
+                cpu: 100m
+          restartPolicy: Never
+{{ end }}
