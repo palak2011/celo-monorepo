@@ -1,0 +1,21 @@
+diff a/packages/cli/README.md b/packages/cli/README.md	(rejected hunks)
+@@ -293,6 +293,9 @@ Configure account address which node can provide signatures for
+ ```
+ USAGE
+   $ celocli config:account ACCOUNT
++
++EXAMPLE
++  account 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
+ ```
+ 
+ _See code: [src/commands/config/account.ts](https://github.com/celo-org/celo-monorepo/blob/v0.0.3/src/commands/config/account.ts)_
+@@ -315,6 +318,9 @@ Configure running node URL with exposed RPC at port
+ ```
+ USAGE
+   $ celocli config:node NODE
++
++EXAMPLE
++  node http://localhost:8545
+ ```
+ 
+ _See code: [src/commands/config/node.ts](https://github.com/celo-org/celo-monorepo/blob/v0.0.3/src/commands/config/node.ts)_

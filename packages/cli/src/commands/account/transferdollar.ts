@@ -22,7 +22,7 @@ export default class DollarTransfer extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(DollarTransfer)
+    const res = this.result
 
     const from: string = res.flags.from
     const to: string = res.flags.to

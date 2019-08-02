@@ -1,0 +1,9 @@
+diff a/packages/cli/src/commands/bonds/notify.ts b/packages/cli/src/commands/bonds/notify.ts	(rejected hunks)
+@@ -7,6 +7,7 @@ import { displaySendTx } from '../../utils/cli'
+ export default class Notify extends BaseCommand {
+   static description = 'Notify a bonded deposit given notice period and gold amount'
+ 
++  static requiresFrom = true
+   static flags = {
+     noticePeriod: flags.string({ ...BondArgs.noticePeriodArg, required: true }),
+     goldAmount: flags.string({ ...BondArgs.goldAmountArg, required: true }),

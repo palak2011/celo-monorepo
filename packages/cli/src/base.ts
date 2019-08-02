@@ -1,12 +1,12 @@
 import { Command, flags } from '@oclif/command'
 import Web3 from 'web3'
-import { getNodeUrl } from './utils/config'
+import { getFromAccount, getNodeUrl } from './utils/config'
 import { injectDebugProvider } from './utils/eth-debug-provider'
-
+import { Address, NULL_ADDRESS } from './utils/helpers'
 export abstract class BaseCommand extends Command {
   static flags = {
-    logLevel: flags.string({ char: 'l' }),
-    help: flags.help({ char: 'h' }),
+    logLevel: flags.string({ hidden: true }),
+    help: flags.help({ hidden: true }),
   }
 
   private _web3: Web3 | null = null
@@ -22,6 +22,24 @@ export abstract class BaseCommand extends Command {
       injectDebugProvider(this._web3)
     }
     return this._web3
+  }
+
+  protected get statics(): typeof BaseCommand {
+    return this.constructor as typeof BaseCommand
+  }
+
+  get fromAccount(): string {
+    // tslint:disable-next-line no-shadowed-variable
+    const { flags } = this.parse(this.statics.flags)
+    if (flags.from) {
+      return flags.from
+    } else {
+      const configuredFrom = getFromAccount(this.config.configDir)
+      if (configuredFrom === NULL_ADDRESS) {
+        throw new Error('Provide from account with --from ADDRESS or config:account ADDRESS')
+      }
+      return configuredFrom
+    }
   }
 
   // TODO(yorke): implement log(msg) switch on logLevel with chalk colored output

@@ -1,0 +1,10 @@
+diff a/packages/cli/src/commands/bonds/register.ts b/packages/cli/src/commands/bonds/register.ts	(rejected hunks)
+@@ -9,7 +9,7 @@ export default class Register extends BaseCommand {
+   static examples = ['register']
+ 
+   async run() {
+-    const bondedDeposits = await BondedDeposits(this.web3, this.fromAccount)
++    const bondedDeposits = await BondedDeposits(this.web3, this.from)
+     const tx = bondedDeposits.methods.createAccount()
+     await displaySendTx('register', tx)
+   }

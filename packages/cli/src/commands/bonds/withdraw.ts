@@ -18,9 +18,8 @@ export default class Withdraw extends BaseCommand {
   static examples = ['withdraw 3600']
 
   async run() {
-    // tslint:disable-next-line
-    const { flags, args } = this.parse(Withdraw)
-    const bondsContract = await BondedDeposits(this.web3, flags.from)
+    const { args } = this.parse(Withdraw)
+    const bondsContract = await BondedDeposits(this.web3, this.fromAccount)
     await displaySendTx('withdraw', bondsContract.methods.withdraw(args.availabilityTime))
   }
 }

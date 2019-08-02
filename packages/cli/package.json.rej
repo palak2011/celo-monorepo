@@ -1,0 +1,33 @@
+diff a/packages/cli/package.json b/packages/cli/package.json	(rejected hunks)
+@@ -1,7 +1,7 @@
+ {
+-  "name": "celo-cli",
+-  "description": "Tool for transacting with the Celo protocol",
+-  "version": "0.0.0",
++  "name": "celocli",
++  "description": "CLI Tool for transacting with the Celo protocol",
++  "version": "0.0.1",
+   "author": "C-Labs",
+   "license": "MIT",
+   "repository": "celo-org/celo-monorepo",
+@@ -10,10 +10,11 @@
+   "types": "lib/index.d.ts",
+   "main": "lib/index.js",
+   "bin": {
+-    "celo-cli": "./bin/run"
++    "celocli": "./bin/run"
+   },
+   "keywords": [
+     "celo",
++    "celocli",
+     "celo-cli"
+   ],
+   "engines": {
+@@ -36,6 +37,7 @@
+     "chalk": "^2.4.2",
+     "cli-table": "^0.3.1",
+     "debug": "^4.1.1",
++    "firebase": "^6.2.4",
+     "fs-extra": "^8.1.0",
+     "tslib": "^1"
+   },

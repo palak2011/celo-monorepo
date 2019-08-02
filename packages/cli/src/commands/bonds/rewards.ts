@@ -7,9 +7,8 @@ import { Flags } from '../../utils/command'
 export default class Rewards extends BaseCommand {
   static description = 'Manage rewards for bonded deposit account'
 
+  static requiresFrom = true
   static flags = {
-    ...BaseCommand.flags,
-    from: Flags.address({ required: true }),
     redeem: flags.boolean({
       char: 'r',
       description: 'Redeem accrued rewards from bonded deposits',
@@ -22,22 +21,20 @@ export default class Rewards extends BaseCommand {
     }),
   }
 
-  static args = []
-
   static examples = [
     'rewards --redeem',
     'rewards --delegate=0x56e172F6CfB6c7D01C1574fa3E2Be7CC73269D95',
   ]
 
   async run() {
-    const res = this.parse(Rewards)
+    const res = this.result
 
     if (!res.flags.redeem && !res.flags.delegate) {
       this.error(`Specify action with --redeem or --delegate`)
       return
     }
 
-    const adapter = await new BondedDepositAdapter(this.web3, res.flags.from)
+    const adapter = await new BondedDepositAdapter(this.web3, this.from)
     if (res.flags.redeem) {
       const contract = await adapter.contract()
       const tx = contract.methods.redeemRewards()
@@ -45,7 +42,7 @@ export default class Rewards extends BaseCommand {
     }
 
     if (res.flags.delegate) {
-      const tx = await adapter.delegateRewardsTx(res.flags.from, res.flags.delegate)
+      const tx = await adapter.delegateRewardsTx(this.from, res.flags.delegate)
       await displaySendTx('delegateRewards', tx)
     }
   }

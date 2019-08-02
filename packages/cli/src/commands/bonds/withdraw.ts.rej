@@ -1,0 +1,10 @@
+diff a/packages/cli/src/commands/bonds/withdraw.ts b/packages/cli/src/commands/bonds/withdraw.ts	(rejected hunks)
+@@ -13,7 +13,7 @@ export default class Withdraw extends BaseCommand {
+ 
+   async run() {
+     const args = this.result.args
+-    const bondsContract = await BondedDeposits(this.web3, this.fromAccount)
++    const bondsContract = await BondedDeposits(this.web3, this.from)
+     await displaySendTx('withdraw', bondsContract.methods.withdraw(args.availabilityTime))
+   }
+ }

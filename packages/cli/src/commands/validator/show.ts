@@ -16,8 +16,7 @@ export default class ValidatorShow extends BaseCommand {
   static examples = ['show 0x97f7333c51897469E8D98E7af8653aAb468050a3']
 
   async run() {
-    const { args } = this.parse(ValidatorShow)
-    const address = args.validatorAddress
+    const address = this.result.args.validatorAddress
     const validator = await new ValidatorsAdapter(this.web3).getValidator(address)
     printValueMap(validator)
   }

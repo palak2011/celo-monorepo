@@ -11,7 +11,6 @@ export default class Show extends BaseCommand {
   static description = 'View bonded gold and corresponding account weight of a deposit given ID'
 
   static flags = {
-    ...BaseCommand.flags,
     noticePeriod: flags.string({
       ...BondArgs.noticePeriodArg,
       exclusive: ['availabilityTime'],
@@ -30,8 +29,8 @@ export default class Show extends BaseCommand {
   ]
 
   async run() {
-    // tslint:disable-next-line
-    const { flags, args } = this.parse(Show)
+    // tslint:disable-next-line no-shadowed-variable
+    const { flags, args } = this.result
 
     if (!(flags.noticePeriod || flags.availabilityTime)) {
       this.error(`Specify bond ID with --noticePeriod or --availabilityTime`)

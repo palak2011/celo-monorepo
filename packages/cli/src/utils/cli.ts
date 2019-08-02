@@ -20,7 +20,7 @@ export async function displaySendTx<A>(name: string, txObj: TransactionObject<A>
 export function printValueMap(valueMap: Record<string, any>) {
   console.log(
     Object.keys(valueMap)
-      .map((key) => chalk`{red.bold ${key}:} ${valueMap[key]}`)
+      .map((key) => chalk`{white.bold ${key}:} ${valueMap[key]}`)
       .join('\n')
   )
 }

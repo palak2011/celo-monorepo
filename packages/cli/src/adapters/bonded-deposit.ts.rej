@@ -1,0 +1,8 @@
+diff a/packages/cli/src/adapters/bonded-deposit.ts b/packages/cli/src/adapters/bonded-deposit.ts	(rejected hunks)
+@@ -1,5 +1,5 @@
+-import { BondedDeposits } from '../../generated/contracts'
+ import Web3 from 'web3'
++import { BondedDeposits } from '../generated/contracts'
+ import { Address, zip } from '../utils/helpers'
+ 
+ import BN from 'bn.js'

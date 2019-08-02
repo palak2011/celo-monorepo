@@ -10,6 +10,7 @@ const parsePublicKey: ParseFn<string> = (input) => {
     return failWith(`${input} is not a public key`)
   }
 }
+
 const parseAddress: ParseFn<string> = (input) => {
   if (Web3.utils.isAddress(input)) {
     return input
@@ -43,4 +44,5 @@ export const Flags = {
 
 export const Args = {
   address: argBuilder(parseAddress),
+  url: argBuilder(parseURL),
 }

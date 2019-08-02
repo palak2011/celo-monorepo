@@ -16,16 +16,13 @@ export default class Notify extends BaseCommand {
     goldAmount: flags.string({ ...BondArgs.goldAmountArg, required: true }),
   }
 
-  static args = []
-
   static examples = ['notify --noticePeriod=3600 --goldAmount=500']
 
   async run() {
-    const res = this.parse(Notify)
-    const bondedDeposits = await BondedDeposits(this.web3, res.flags.from)
+    const bondedDeposits = await BondedDeposits(this.web3, this.from)
     await displaySendTx(
       'notify',
-      bondedDeposits.methods.notify(res.flags.goldAmount, res.flags.noticePeriod)
+      bondedDeposits.methods.notify(this.result.flags.goldAmount, this.from)
     )
   }
 }

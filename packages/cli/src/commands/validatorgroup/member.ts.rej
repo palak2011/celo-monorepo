@@ -1,0 +1,9 @@
+diff a/packages/cli/src/commands/validatorgroup/member.ts b/packages/cli/src/commands/validatorgroup/member.ts	(rejected hunks)
+@@ -7,6 +7,7 @@ import { Args } from '../../utils/command'
+ export default class ValidatorGroupRegister extends BaseCommand {
+   static description = 'Register a new Validator Group'
+ 
++  static requiresFrom = true
+   static flags = {
+     accept: flags.boolean({
+       exclusive: ['remove'],

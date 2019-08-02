@@ -1,0 +1,17 @@
+diff a/packages/cli/src/utils/command.ts b/packages/cli/src/utils/command.ts	(rejected hunks)
+@@ -28,12 +28,13 @@ const parseURL: ParseFn<string> = (input) => {
+ }
+ 
+ type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
+-type ArgBuilder<T> = (name: string, args: Partial<Omit<IArg<T>, 'name' | 'parse'>>) => IArg<T>
++type ArgBuilder<T> = (name: string, args?: Partial<Omit<IArg<T>, 'name' | 'parse'>>) => IArg<T>
+ export function argBuilder<T>(parser: ParseFn<T>): ArgBuilder<T> {
+-  return (name, args) => ({
++  return (name, args = {}) => ({
+     name,
+     ...args,
+     parse: parser,
++    required: true,
+   })
+ }
+ 

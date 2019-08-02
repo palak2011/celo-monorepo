@@ -1,0 +1,10 @@
+diff a/packages/cli/src/commands/validatorgroup/register.ts b/packages/cli/src/commands/validatorgroup/register.ts	(rejected hunks)
+@@ -23,7 +23,7 @@ export default class ValidatorGroupRegister extends BaseCommand {
+   async run() {
+     const res = this.result
+ 
+-    const validatorsInstance = await Validators(this.web3, this.fromAccount)
++    const validatorsInstance = await Validators(this.web3, this.from)
+ 
+     await displaySendTx(
+       'registerValidatorGroup',

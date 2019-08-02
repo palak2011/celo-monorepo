@@ -10,9 +10,8 @@ import { Flags } from '../../utils/command'
 export default class GoldTransfer extends BaseCommand {
   static description = 'Transfer gold'
 
+  static requiresFrom = true
   static flags = {
-    ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Address of the sender' }),
     to: Flags.address({ required: true, description: 'Address of the receiver' }),
     amountInWei: flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
   }
@@ -22,7 +21,7 @@ export default class GoldTransfer extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(GoldTransfer)
+    const res = this.result
 
     const from: string = res.flags.from
     const to: string = res.flags.to

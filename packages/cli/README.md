@@ -259,10 +259,8 @@ USAGE
 
 OPTIONS
   -d, --delegate=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Delegate rewards to provided account
-  -h, --help                                                 show CLI help
-  -l, --logLevel=logLevel
   -r, --redeem                                               Redeem accrued rewards from bonded deposits
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          (required) Account Address
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          Account to send signed tx from
 
 EXAMPLES
   rewards --redeem
@@ -523,8 +521,7 @@ ARGUMENTS
   VALIDATORADDRESS  Validator's address
 
 OPTIONS
-  -h, --help               show CLI help
-  -l, --logLevel=logLevel
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Account to send signed tx from
 
 EXAMPLE
   show 0x97f7333c51897469E8D98E7af8653aAb468050a3
@@ -562,10 +559,8 @@ ARGUMENTS
   VALIDATORADDRESS  Validator's address
 
 OPTIONS
-  -h, --help                                         show CLI help
-  -l, --logLevel=logLevel
   --accept                                           Accept a validatior whose affiliation is already set to the vgroup
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) ValidatorGroup's address
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Account to send signed tx from
   --remove                                           Remove a validatior from the members list
 
 EXAMPLES
@@ -611,8 +606,7 @@ ARGUMENTS
   GROUPADDRESS  ValidatorGroup's address
 
 OPTIONS
-  -h, --help               show CLI help
-  -l, --logLevel=logLevel
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Account to send signed tx from
 
 EXAMPLE
   show 0x97f7333c51897469E8D98E7af8653aAb468050a3

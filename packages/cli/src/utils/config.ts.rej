@@ -1,0 +1,18 @@
+diff a/packages/cli/src/utils/config.ts b/packages/cli/src/utils/config.ts	(rejected hunks)
+@@ -2,13 +2,16 @@
+ // TODO: investigate tslint issues
+ import * as fs from 'fs-extra'
+ import * as path from 'path'
++import { NULL_ADDRESS } from './helpers'
+ 
+ export interface CeloConfig {
+   nodeUrl: string
++  fromAccount: string
+ }
+ 
+ export const localGeth: CeloConfig = {
+   nodeUrl: 'ws://localhost:8546',
++  fromAccount: NULL_ADDRESS,
+ }
+ 
+ const configFile = 'config.json'

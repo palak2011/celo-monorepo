@@ -29,6 +29,10 @@ export function getNodeUrl(configDir: string): string {
   return readConfig(configDir).nodeUrl
 }
 
+export function getFromAccount(configDir: string): string {
+  return readConfig(configDir).fromAccount
+}
+
 export function writeConfig(configDir: string, configObj: CeloConfig) {
   fs.outputJSONSync(configPath(configDir), configObj)
 }

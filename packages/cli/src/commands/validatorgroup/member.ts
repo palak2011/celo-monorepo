@@ -30,14 +30,14 @@ export default class ValidatorGroupRegister extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorGroupRegister)
+    const res = this.result
 
     if (!(res.flags.accept || res.flags.remove)) {
       this.error(`Specify action: --accept or --remove`)
       return
     }
 
-    const contract = await Validators(this.web3, res.flags.from)
+    const contract = await Validators(this.web3, this.from)
 
     if (res.flags.accept) {
       await displaySendTx(

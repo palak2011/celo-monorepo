@@ -1,0 +1,11 @@
+diff a/packages/cli/src/commands/account/transferdollar.ts b/packages/cli/src/commands/account/transferdollar.ts	(rejected hunks)
+@@ -8,8 +8,8 @@ import { Flags } from '../../utils/command'
+ export default class DollarTransfer extends BaseCommand {
+   static description = 'Transfer dollar'
+ 
++  static requiresFrom = true
+   static flags = {
+-    from: Flags.address({ required: true, description: 'Address of the sender' }),
+     to: Flags.address({ required: true, description: 'Address of the receiver' }),
+     amountInWei: flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+   }

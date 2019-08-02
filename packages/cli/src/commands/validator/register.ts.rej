@@ -1,0 +1,7 @@
+diff a/packages/cli/src/commands/validator/register.ts b/packages/cli/src/commands/validator/register.ts	(rejected hunks)
+@@ -1,4 +1,4 @@
+-import { Validators } from '@celo/contractkit'
++import { Validators } from '../../generated/contracts'
+ import { flags } from '@oclif/command'
+ import { BaseCommand } from '../../base'
+ import { displaySendTx } from '../../utils/cli'

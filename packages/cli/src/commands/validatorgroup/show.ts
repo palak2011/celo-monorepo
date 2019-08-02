@@ -1,4 +1,3 @@
-import { IArg } from '@oclif/parser/lib/args'
 import { ValidatorsAdapter } from '../../adapters/validators'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'

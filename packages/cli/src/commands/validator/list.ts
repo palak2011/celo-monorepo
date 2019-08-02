@@ -5,15 +5,9 @@ import { BaseCommand } from '../../base'
 export default class ValidatorList extends BaseCommand {
   static description = 'List existing Validators'
 
-  static flags = {
-    ...BaseCommand.flags,
-  }
-
   static examples = ['list']
 
   async run() {
-    this.parse(ValidatorList)
-
     cli.action.start('Fetching Validators')
     const validators = await new ValidatorsAdapter(this.web3).getRegisteredValidators()
 

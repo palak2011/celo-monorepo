@@ -1,0 +1,44 @@
+diff a/packages/cli/src/base.ts b/packages/cli/src/base.ts	(rejected hunks)
+@@ -30,13 +30,13 @@ export abstract class BaseCommand extends Command {
+   private _originalProvider: any | null = null
+ 
+   static get flags() {
++    // here because `this` can't be referenced in static initializer
++    this._flags.from.hidden = !this.requiresFrom
+     return this._flags
+   }
+ 
+   static set flags(additionalFlags: Flags.Input<any>) {
+     this._flags = { ...this._flags, ...additionalFlags }
+-    // here because `this` can't be referenced in static initializer
+-    this._flags.from.hidden = !this.requiresFrom
+   }
+ 
+   protected get statics(): typeof BaseCommand {
+@@ -80,18 +80,16 @@ export abstract class BaseCommand extends Command {
+   }
+ 
+   async finally(arg: Error | undefined): Promise<any> {
+-    if (this.statics.requiresWeb3) {
+-      try {
+-        // Close the web3 connection or the CLI hangs forever.
+-        if (this._originalProvider && this._originalProvider.hasOwnProperty('connection')) {
+-          const connection = this._originalProvider.connection
+-          if (connection.hasOwnProperty('_connection')) {
+-            connection._connection.close()
+-          }
++    try {
++      // Close the web3 connection or the CLI hangs forever.
++      if (this._originalProvider && this._originalProvider.hasOwnProperty('connection')) {
++        const connection = this._originalProvider.connection
++        if (connection.hasOwnProperty('_connection')) {
++          connection._connection.close()
+         }
+-      } catch (error) {
+-        this.log(`Failed to close the connection: ${error}`)
+       }
++    } catch (error) {
++      this.log(`Failed to close the connection: ${error}`)
+     }
+ 
+     return super.finally(arg)

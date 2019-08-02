@@ -1,0 +1,9 @@
+diff a/packages/cli/src/adapters/validators.ts b/packages/cli/src/adapters/validators.ts	(rejected hunks)
+@@ -1,6 +1,6 @@
+-import { Validators } from '../../generated/contracts'
+ import Web3 from 'web3'
+ import { TransactionObject } from 'web3/eth/types'
++import { Validators } from '../generated/contracts'
+ import { Address, compareBN, eqAddress, NULL_ADDRESS, zip } from '../utils/helpers'
+ import { BondedDepositAdapter } from './bonded-deposit'
+ 

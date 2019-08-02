@@ -1,13 +1,11 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
 
 environment="$1"
 
-yarn --cwd=../contractkit build $environment
+yarn --cwd ../sdk build-sdk $environment
 
 rm -rf ./src/generated
 mkdir -p ./src/generated/contracts
 mkdir -p ./src/generated/types
-cp ../contractkit/contracts/*.ts ./src/generated/contracts
-cp ../contractkit/types/*.d.ts ./src/generated/types
-
+cp ../sdk/contracts/*.ts ./src/generated/contracts
+cp ../sdk/types/*.d.ts ./src/generated/types
