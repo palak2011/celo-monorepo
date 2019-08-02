@@ -4,3 +4,11 @@ service: production
 instance_class: B4
 manual_scaling:
   instances: 1
+  ENVIRONMENT: production
+  PORT: 80
+  FIREBASE_DB: https://celo-org-mobile.firebaseio.com
+  BLOCKSCOUT_API: https://argentinaproduction-blockscout.celo-testnet.org/api?
+  NODE_TLS_REJECT_UNAUTHORIZED: 0
+  DEFAULT_LOCALE: es
+  NOTIFICATION_TTL_MS: 604800000
+  POLLING_INTERVAL: 1000

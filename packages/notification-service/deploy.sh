@@ -19,9 +19,6 @@ done
 
 echo "Starting notification service deployment."
 
-echo 'Copying over config file'
-cp "config/config.${NETWORK}.env" .env
-
 echo 'Deploying to gcloud'
 gcloud --project celo-org-mobile app deploy -q "app.${NETWORK}.yaml"
 

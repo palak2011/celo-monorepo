@@ -1,12 +1,18 @@
+import { getGoldTokenAddress, getStableTokenAddress } from '@celo/contractkit/lib'
+import { web3 } from '@celo/mobile/src/web3/contracts'
 import BigNumber from 'bignumber.js'
 import fetch from 'node-fetch'
-import { BLOCKSCOUT_API, Currencies, GOLD_TOKEN_ADDRESS, STABLE_TOKEN_ADDRESS } from '../config'
+import { BLOCKSCOUT_API } from '../config'
 import { getLastBlockNotified, sendPaymentNotification, setLastBlockNotified } from '../firebase'
 import { removeEmptyValuesFromObject } from '../util/utils'
 import { Log, Response, Transfer } from './blockscout'
 import { decodeLogs } from './decode'
-
 export const WEI_PER_GOLD = 1000000000000000000.0
+
+export enum Currencies {
+  GOLD = 'gold',
+  DOLLAR = 'dollar',
+}
 
 async function query(path: string) {
   try {
@@ -108,6 +114,9 @@ export async function handleTransferNotifications(): Promise<void> {
     // Firebase not yet ready
     return
   }
+
+  const GOLD_TOKEN_ADDRESS = await getGoldTokenAddress(web3)
+  const STABLE_TOKEN_ADDRESS = await getStableTokenAddress(web3)
 
   const {
     transfers: goldTransfers,

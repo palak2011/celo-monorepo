@@ -3,7 +3,7 @@ import { GoldToken as GoldTokenType } from '../types/GoldToken'
 import { IERC20Token as TokenType } from '../types/IERC20Token'
 import { StableToken as StableTokenType } from '../types/StableToken'
 import { sendTransaction } from './contract-utils'
-import { getGoldTokenContract } from './contracts'
+import { getGoldTokenContract, getStableTokenContract } from './contracts'
 // Write out the full number in "toString()"
 BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 const tag = 'erc20-utils'
@@ -96,4 +96,9 @@ export async function transferTokenWithComment(
 export async function getGoldTokenAddress(web3: any): Promise<string> {
   const goldToken: GoldTokenType = await getGoldTokenContract(web3)
   return goldToken._address
+}
+
+export async function getStableTokenAddress(web3: any): Promise<string> {
+  const stableToken: StableTokenType = await getStableTokenContract(web3)
+  return stableToken._address
 }
