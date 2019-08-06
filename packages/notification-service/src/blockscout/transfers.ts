@@ -14,7 +14,7 @@ export enum Currencies {
   DOLLAR = 'dollar',
 }
 
-async function query(path: string) {
+export async function query(path: string) {
   try {
     console.debug('Querying Blockscout. Path:', path)
     const response = await fetch(BLOCKSCOUT_API + path)
@@ -54,7 +54,7 @@ async function getLatestTokenTransfers(
   return { transfers, latestBlock }
 }
 
-function filterAndJoinTransfers(
+export function filterAndJoinTransfers(
   goldTransfers: Map<string, Transfer> | null,
   stableTransfers: Map<string, Transfer> | null
 ): Transfer[] {
@@ -75,7 +75,10 @@ function filterAndJoinTransfers(
   return filteredGold.concat(filterdStable)
 }
 
-function notifyForNewTransfers(transfers: Transfer[], lastBlockNotified: number): Promise<void[]> {
+export function notifyForNewTransfers(
+  transfers: Transfer[],
+  lastBlockNotified: number
+): Promise<void[]> {
   const results = new Array<Promise<void>>(transfers.length)
   for (let i = 0; i < transfers.length; i++) {
     const t = transfers[i]
@@ -98,10 +101,13 @@ function notifyForNewTransfers(transfers: Transfer[], lastBlockNotified: number)
     )
     results[i] = result
   }
-  return Promise.all(results)
+  const filtered = results.filter((el) => {
+    return el !== undefined
+  })
+  return Promise.all(filtered)
 }
 
-function convertWeiValue(value: string) {
+export function convertWeiValue(value: string) {
   return new BigNumber(value)
     .div(WEI_PER_GOLD)
     .decimalPlaces(4)
