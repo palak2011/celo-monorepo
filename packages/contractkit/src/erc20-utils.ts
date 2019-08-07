@@ -1,9 +1,9 @@
 import { BigNumber } from 'bignumber.js'
+import { GoldTokenAddress } from '../contracts/GoldToken'
 import { GoldToken as GoldTokenType } from '../types/GoldToken'
 import { IERC20Token as TokenType } from '../types/IERC20Token'
 import { StableToken as StableTokenType } from '../types/StableToken'
 import { sendTransaction } from './contract-utils'
-import { getGoldTokenContract, getStableTokenContract } from './contracts'
 // Write out the full number in "toString()"
 BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 const tag = 'erc20-utils'
@@ -23,7 +23,7 @@ export async function getErc20Balance(contract: TokenType, address: string, web3
 
 // TODO(asa): Figure out why GoldToken.balanceOf() returns 2^256 - 1
 export async function balanceOf(contract: TokenType, address: string, web3: any) {
-  if (contract.options.address === (await getGoldTokenAddress(web3))) {
+  if (contract.options.address === GoldTokenAddress) {
     return new BigNumber(await web3.eth.getBalance(address))
   } else {
     return new BigNumber(await contract.methods.balanceOf(address).call())
@@ -90,15 +90,4 @@ export async function transferTokenWithComment(
 ) {
   const tx = token.methods.transferWithComment(toAddress, amount.toString(), comment)
   return sendTransaction(tag, 'transfer token with comment', tx, txOptions)
-}
-
-// exported for testing
-export async function getGoldTokenAddress(web3: any): Promise<string> {
-  const goldToken: GoldTokenType = await getGoldTokenContract(web3)
-  return goldToken._address
-}
-
-export async function getStableTokenAddress(web3: any): Promise<string> {
-  const stableToken: StableTokenType = await getStableTokenContract(web3)
-  return stableToken._address
 }
