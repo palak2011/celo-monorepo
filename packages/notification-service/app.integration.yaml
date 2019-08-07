@@ -4,6 +4,7 @@ service: integration
 instance_class: B4
 manual_scaling:
   instances: 1
+env_variables:
   ENVIRONMENT: integration
   PORT: 80
   FIREBASE_DB: https://celo-org-mobile-int.firebaseio.com

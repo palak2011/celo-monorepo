@@ -1,4 +1,8 @@
+import dotenv from 'dotenv'
 import i18next from 'i18next'
+
+// Load environment variables from .env file
+dotenv.config()
 
 export function getFirebaseAdminCreds(admin: any) {
   if (ENVIRONMENT === 'local') {

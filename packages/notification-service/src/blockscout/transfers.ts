@@ -1,7 +1,7 @@
-import { getGoldTokenAddress, getStableTokenAddress } from '@celo/contractkit/lib'
-import { web3 } from '@celo/mobile/src/web3/contracts'
 import BigNumber from 'bignumber.js'
 import fetch from 'node-fetch'
+import { GoldTokenAddress } from '../../../contractkit/contracts/GoldToken'
+import { StableTokenAddress } from '../../../contractkit/contracts/StableToken'
 import { BLOCKSCOUT_API } from '../config'
 import { getLastBlockNotified, sendPaymentNotification, setLastBlockNotified } from '../firebase'
 import { removeEmptyValuesFromObject } from '../util/utils'
@@ -121,8 +121,8 @@ export async function handleTransferNotifications(): Promise<void> {
     return
   }
 
-  const GOLD_TOKEN_ADDRESS = await getGoldTokenAddress(web3)
-  const STABLE_TOKEN_ADDRESS = await getStableTokenAddress(web3)
+  const GOLD_TOKEN_ADDRESS = GoldTokenAddress
+  const STABLE_TOKEN_ADDRESS = StableTokenAddress
 
   const {
     transfers: goldTransfers,
