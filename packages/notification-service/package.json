@@ -9,8 +9,9 @@
     "node": "8.x"
   },
   "scripts": {
-    "build": "../contractkit/bin/build-sdk.js && tsc",
+    "build": "./build-notification-service.sh",
     "gcp-build": "npm run build",
+    "postinstall": "yarn run build alfajores",
     "test": "export TZ=UTC && jest",
     "test:watch": "yarn test --watch",
     "lint": "tslint -c tslint.json --project tsconfig.json",
@@ -20,6 +21,7 @@
     "deploy": "./deploy.sh"
   },
   "dependencies": {
+    "@celo/contractkit": "git+https://github.com/sallyjyl/contractKit-test.git",
     "async-polling": "^0.2.1",
     "bignumber.js": "^7.2.0",
     "dotenv": "^6.0.0",

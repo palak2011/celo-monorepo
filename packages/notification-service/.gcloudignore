@@ -4,6 +4,7 @@
 
 # Exclude compiled .js files
 *.js
+!*build-sdk.js
 *.js.map
 dist/
 

@@ -1,18 +1,10 @@
 #!/usr/bin/env node
 // tslint:disable:no-console
-var __importDefault =
-  (this && this.__importDefault) ||
-  function(mod) {
-    return mod && mod.__esModule ? mod : { default: mod }
-  }
+console.log('SHOULD NOT BE RUNNING THIS IN NOTIFICATION SERVICESSSSSSS')
 const execSync = require('child_process').execSync
 const fs = require('fs')
 const chalk = require('chalk')
 const path = require('path')
-const dotenv_1 = __importDefault(require('dotenv'))
-
-// Load environment variables from .env file
-dotenv_1.default.config()
 
 function execCmd(cmd) {
   console.log('Running ==> ' + chalk.bold.cyan(cmd))
@@ -79,7 +71,6 @@ export default async function getInstance(web3: Web3, account: string | null = n
   contract.options.from = account || (await web3.eth.getAccounts())[0]
   return contract
 }
-export const ${contractName}Address = "${proxyAddress}"
 `
   )
 }
@@ -105,7 +96,7 @@ function writeProxiedContractGetters(artifactDir, outputDir, environment) {
       writeProxiedContractGetter(jsonDir, contractName, outputDir)
       fs.appendFileSync(
         indexFilePath,
-        `export { default as ${contractName}, ${contractName}Address } from './${contractName}';`
+        `export { default as ${contractName} } from './${contractName}';\n`
       )
     } catch (e) {
       console.log(`Error with ${contractName} proxy: `, e)
@@ -119,17 +110,11 @@ const argv = require('minimist')(process.argv.slice(2))
 function buildSdk() {
   try {
     const modulePath = path.dirname(__dirname)
-    let network
     if (argv._.length === 0) {
-      network = process.env.ENVIRONMENT
-      console.log('NETWORKKKKKK', process.env.ENVIRONMENT)
-      if (!network) {
-        console.error('First argument should be the environment name')
-        process.exit(1)
-      }
-    } else {
-      network = argv._[0]
+      console.error('First argument should be the environment name')
+      process.exit(1)
     }
+    const network = argv._[0]
     const artifactsPath = path.join(modulePath, '.artifacts')
     const contractsPath = path.join(modulePath, './contracts')
     execCmd(`rm -rf ${path.join(artifactsPath, network)} ${path.join(contractsPath)}`)

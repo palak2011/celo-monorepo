@@ -84,6 +84,7 @@ export {
   CeloTokenType,
   convertToContractDecimals,
   getErc20Balance,
+  getGoldTokenAddress,
   parseFromContractDecimals,
   selectTokenContractByIdentifier,
   transferToken,

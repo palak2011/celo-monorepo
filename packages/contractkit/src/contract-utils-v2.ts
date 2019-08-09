@@ -3,8 +3,6 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { TransactionObject } from 'web3/eth/types'
 import { TransactionReceipt } from 'web3/types'
-import { GoldTokenAddress } from '../contracts/GoldToken'
-import { StableTokenAddress } from '../contracts/StableToken'
 import { Exchange } from '../types/Exchange'
 import { GasPriceMinimum as GasPriceMinimumType } from '../types/GasPriceMinimum'
 import { GoldToken as GoldTokenType } from '../types/GoldToken'
@@ -72,7 +70,7 @@ export default class ContractUtils {
     // Do nothing for the default currency Gold
     let gasCurrencyAddress: string | undefined
     if (gasCurrency !== Tokens.GOLD) {
-      gasCurrencyAddress = await ContractUtils.getAddressForCurrencyContract(gasCurrency)
+      gasCurrencyAddress = await ContractUtils.getAddressForCurrencyContract(web3, gasCurrency)
     }
     if (gasPrice === undefined) {
       gasPrice = await ContractUtils.getGasPrice(web3, gasCurrency)
@@ -107,7 +105,7 @@ export default class ContractUtils {
     // Do nothing for the default currency Gold
     let gasCurrencyAddress: string | undefined
     if (gasCurrency !== Tokens.GOLD) {
-      gasCurrencyAddress = await ContractUtils.getAddressForCurrencyContract(gasCurrency)
+      gasCurrencyAddress = await ContractUtils.getAddressForCurrencyContract(web3, gasCurrency)
     }
     if (gasPrice === undefined) {
       gasPrice = await ContractUtils.getGasPrice(web3, gasCurrency)
@@ -151,7 +149,10 @@ export default class ContractUtils {
 
   static async getGasPrice(web3: Web3, gasCurrency: Tokens = Tokens.GOLD): Promise<BigNumber> {
     const gasPriceMinimum: GasPriceMinimumType = await getGasPriceMinimumContract(web3)
-    const currencyAddress: string = await ContractUtils.getAddressForCurrencyContract(gasCurrency)
+    const currencyAddress: string = await ContractUtils.getAddressForCurrencyContract(
+      web3,
+      gasCurrency
+    )
 
     const gasPriceMinimumInCurrency = await gasPriceMinimum.methods
       .getGasPriceMinimum(currencyAddress)
@@ -160,12 +161,12 @@ export default class ContractUtils {
     return new BigNumber(gasPriceMinimumInCurrency).times(5)
   }
 
-  static getAddressForCurrencyContract(currency: Tokens): string {
+  static async getAddressForCurrencyContract(web3: Web3, currency: Tokens): Promise<string> {
     switch (currency) {
       case Tokens.DOLLAR:
-        return StableTokenAddress
+        return (await getStableTokenContract(web3))._address
       case Tokens.GOLD:
-        return GoldTokenAddress
+        return (await getGoldTokenContract(web3))._address
     }
   }
 }
