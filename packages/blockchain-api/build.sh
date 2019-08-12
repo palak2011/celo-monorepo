@@ -1,0 +1,1 @@
+../contractkit/bin/build-sdk.js $1 && tsc -p . 

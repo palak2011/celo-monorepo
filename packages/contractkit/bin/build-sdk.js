@@ -4,6 +4,9 @@ const execSync = require('child_process').execSync
 const fs = require('fs')
 const chalk = require('chalk')
 const path = require('path')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 function execCmd(cmd) {
   console.log('Running ==> ' + chalk.bold.cyan(cmd))
@@ -70,6 +73,7 @@ export default async function getInstance(web3: Web3, account: string | null = n
   contract.options.from = account || (await web3.eth.getAccounts())[0]
   return contract
 }
+export const ${contractName}Address = "${proxyAddress}"
 `
   )
 }
@@ -95,7 +99,7 @@ function writeProxiedContractGetters(artifactDir, outputDir, environment) {
       writeProxiedContractGetter(jsonDir, contractName, outputDir)
       fs.appendFileSync(
         indexFilePath,
-        `export { default as ${contractName} } from './${contractName}';\n`
+        `export { default as ${contractName}, ${contractName}Address } from './${contractName}';\n`
       )
     } catch (e) {
       console.log(`Error with ${contractName} proxy: `, e)
@@ -109,11 +113,15 @@ const argv = require('minimist')(process.argv.slice(2))
 function buildSdk() {
   try {
     const modulePath = path.dirname(__dirname)
+    let network
     if (argv._.length === 0) {
-      console.error('First argument should be the environment name')
-      process.exit(1)
+      network = process.env.ENVIRONMENT
+      if (!network) {
+        console.error('First argument should be the environment name')
+        process.exit(1)
+      }
     }
-    const network = argv._[0]
+    network = argv._[0]
     const artifactsPath = path.join(modulePath, '.artifacts')
     const contractsPath = path.join(modulePath, './contracts')
     execCmd(`rm -rf ${path.join(artifactsPath, network)} ${path.join(contractsPath)}`)

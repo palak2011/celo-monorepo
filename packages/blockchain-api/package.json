@@ -14,7 +14,7 @@
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "start": "node ./dist/index.js",
     "start:dev": "tsc-watch --onSuccess \"node ./dist/index.js\" ",
-    "build": "tsc -p .",
+    "build": "./build.sh",
     "gcp-build": "npm run build",
     "deploy": "gcloud app deploy"
   },

@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js'
+import { GoldTokenAddress } from '../contracts/GoldToken'
 import { GoldToken as GoldTokenType } from '../types/GoldToken'
 import { IERC20Token as TokenType } from '../types/IERC20Token'
 import { StableToken as StableTokenType } from '../types/StableToken'
@@ -23,7 +24,7 @@ export async function getErc20Balance(contract: TokenType, address: string, web3
 
 // TODO(asa): Figure out why GoldToken.balanceOf() returns 2^256 - 1
 export async function balanceOf(contract: TokenType, address: string, web3: any) {
-  if (contract.options.address === (await getGoldTokenAddress(web3))) {
+  if (contract.options.address === GoldTokenAddress) {
     return new BigNumber(await web3.eth.getBalance(address))
   } else {
     return new BigNumber(await contract.methods.balanceOf(address).call())
